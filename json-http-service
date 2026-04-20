@@ -1,0 +1,71 @@
+//fetch json data
+[
+  { "id": 1, "name": "Hansini", "role": "Developer" },
+  { "id": 2, "name": "Adifa", "role": "Designer" },
+  { "id": 3, "name": "Yasasvi", "role": "Tester" }
+]
+
+//index.html
+<!DOCTYPE html>
+<html ng-app="app"> <!-- Initialize AngularJS app -->
+<head>
+    <title>Employee List</title>
+
+    <!-- AngularJS CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+    <!-- Simple table styling -->
+    <style>
+        table {
+            margin: 30px auto;
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 5px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body ng-controller="ctrl"> <!-- Connect controller -->
+
+    <h2 style="text-align:center;">Employee List</h2>
+
+    <!-- Table to display data -->
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Role</th>
+        </tr>
+
+        <!-- Loop through employees -->
+        <tr ng-repeat="emp in employees">
+            <td>{{emp.id}}</td>   <!-- Display ID -->
+            <td>{{emp.name}}</td> <!-- Display Name -->
+            <td>{{emp.role}}</td> <!-- Display Role -->
+        </tr>
+    </table>
+
+    <script>
+  
+        angular.module("app", [])
+
+        .controller("ctrl", function($scope, $http) {
+
+ 
+            $http.get("employees.json")
+
+
+            .then(function(response) {
+
+      
+                $scope.employees = response.data;
+            });
+        });
+    </script>
+
+</body>
+</html>
