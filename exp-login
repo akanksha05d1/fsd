@@ -1,0 +1,94 @@
+//server.js
+// Import required modules
+const express = require('express');
+const bodyParser = require('body-parser');
+const path = require('path');
+
+const app = express();
+const PORT = 3000;
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(express.static('public'));
+
+
+let users = [];
+
+app.post('/register', (req, res) => {
+    const { username, password } = req.body;
+
+    const userExists = users.find(user => user.username === username);
+
+    if (userExists) {
+        res.send("User already exists!");
+    } else {
+        // Save user
+        users.push({ username, password });
+        res.send("Registration successful! Go to login page.");
+    }
+});
+app.post('/login', (req, res) => {
+    const { username, password } = req.body;
+
+    const user = users.find(
+        user => user.username === username && user.password === password
+    );
+
+    if (user) {
+        res.send("Login successful! Welcome " + username);
+    } else {
+        res.send("Invalid username or password!");
+    }
+});
+
+app.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}`);
+});
+
+//register.html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+</head>
+<body>
+
+<h2>Register</h2>
+
+<!-- Form sends data to /register -->
+<form action="/register" method="POST">
+    Username: <input type="text" name="username" required><br><br>
+    Password: <input type="password" name="password" required><br><br>
+    
+    <button type="submit">Register</button>
+</form>
+
+<br>
+<a href="login.html">Go to Login</a>
+
+</body>
+</html>
+
+
+//login.html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+</head>
+<body>
+
+<h2>Login</h2>
+
+<!-- Form sends data to /login -->
+<form action="/login" method="POST">
+    Username: <input type="text" name="username" required><br><br>
+    Password: <input type="password" name="password" required><br><br>
+    
+    <button type="submit">Login</button>
+</form>
+
+<br>
+<a href="register.html">Go to Register</a>
+
+</body>
+</html>
