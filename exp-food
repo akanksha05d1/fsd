@@ -1,0 +1,88 @@
+//server.js
+const express = require('express');
+const bodyParser = require('body-parser');
+
+const app = express();
+const PORT = 3000;
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(express.static('public'));
+
+const menu = [
+    { name: "Pizza", price: 200 },
+    { name: "Burger", price: 120 },
+    { name: "Pasta", price: 150 }
+];
+
+app.post('/order', (req, res) => {
+    const { username, food } = req.body;
+
+    // Find selected food
+    const item = menu.find(m => m.name === food);
+
+    if (item) {
+        res.send(`
+            <h2>Order Confirmed!</h2>
+            <p>Thank you, ${username}</p>
+            <p>You ordered: ${food}</p>
+            <p>Price: ₹${item.price}</p>
+            <a href="/index.html">Go Back</a>
+        `);
+    } else {
+        res.send("Invalid order!");
+    }
+});
+
+app.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}`);
+});
+
+//index.html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Food Delivery</title>
+</head>
+<body>
+
+<h1>Welcome to Food Delivery</h1>
+
+<p>Restaurant: Tasty Bites 🍔</p>
+
+<a href="menu.html">View Menu & Order</a>
+
+</body>
+</html>
+
+//menu.html\
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Menu</title>
+</head>
+<body>
+
+<h2>Menu</h2>
+
+<!-- Order Form -->
+<form action="/order" method="POST">
+
+    Name: <input type="text" name="username" required><br><br>
+
+    Select Food:
+    <select name="food">
+        <option>Pizza</option>
+        <option>Burger</option>
+        <option>Pasta</option>
+    </select>
+
+    <br><br>
+    <button type="submit">Order Now</button>
+</form>
+
+<br>
+<a href="index.html">Back to Home</a>
+
+</body>
+</html>
