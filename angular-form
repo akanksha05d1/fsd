@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html ng-app="app"> <!-- Initialize AngularJS app -->
+<head>
+    <title>Angular Form</title>
+
+    <!-- AngularJS CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+    <!-- Simple CSS for layout -->
+    <style>
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+    </style>
+</head>
+
+<body ng-controller="ctrl"> <!-- Connect controller -->
+
+    <!-- Form with submit event -->
+    <form ng-submit="submitForm()">
+
+        <!-- Input field for name -->
+        <input type="text" ng-model="name" placeholder="Name">
+
+        <br>
+
+        <!-- Input field for email -->
+        <input type="text" ng-model="email" placeholder="Email">
+
+        <br>
+
+        <!-- Submit button -->
+        <button type="submit">Submit</button>
+    </form>
+
+    <!-- Display message after form submission -->
+    <p>{{msg}}</p>
+
+    <script>
+        // Create AngularJS module
+        angular.module("app", [])
+
+        // Create controller
+        .controller("ctrl", function($scope) {
+
+            // Function triggered on form submit
+            $scope.submitForm = function() {
+
+                // Create message using user input
+                $scope.msg = "Job Registered for " + $scope.name;
+            };
+        });
+    </script>
+
+</body>
+</html>
