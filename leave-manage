@@ -1,0 +1,51 @@
+import React, { useState } from 'react';
+
+function LeaveManager() {
+
+  const [leaves, setLeaves] = useState([
+    { type: "Casual", count: 10 },
+    { type: "Medical", count: 5 }
+  ]);
+
+  const [message, setMessage] = useState("");
+
+  const applyLeave = (index) => {
+
+    const newLeaves = [...leaves];
+
+    if (newLeaves[index].count > 0) {
+
+      newLeaves[index].count -= 1;
+
+      setLeaves(newLeaves);
+
+      setMessage("Leave applied for " + newLeaves[index].type);
+
+    } else {
+ 
+      setMessage("No leaves remaining");
+    }
+  };
+
+  return (
+    <div>
+      <h2>Leave Management</h2>
+
+      {leaves.map((item, index) => (
+        <div key={index}>
+
+          {item.type} Leaves: {item.count}
+
+          <button onClick={() => applyLeave(index)}>
+            Apply {item.type}
+          </button>
+
+        </div>
+      ))}
+
+      <p>{message}</p>
+    </div>
+  );
+}
+
+export default LeaveManager;
