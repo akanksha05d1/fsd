@@ -1,0 +1,60 @@
+import React, { useState } from 'react';
+
+function Calculator() {
+
+  // Store input numbers
+  const [inputs, setInputs] = useState({ num1: 0, num2: 0 });
+
+  // Store result
+  const [result, setResult] = useState(0);
+
+  // Handle input change
+  const handleInputChange = (e) => {
+
+    const { name, value } = e.target;
+
+    // Update specific input value
+    setInputs(prev => ({
+      ...prev,
+      [name]: parseFloat(value) || 0
+    }));
+  };
+
+  // Perform calculation
+  const calculate = (operation) => {
+
+    const { num1, num2 } = inputs;
+    let res = 0;
+
+    if (operation === 'add') res = num1 + num2;
+    if (operation === 'sub') res = num1 - num2;
+    if (operation === 'mul') res = num1 * num2;
+    if (operation === 'div') res = num2 !== 0 ? num1 / num2 : "Error";
+
+    // Update result
+    setResult(res);
+  };
+
+  return (
+    <div>
+      <h2>Calculator</h2>
+
+      {/* Input fields */}
+      <input type="number" name="num1" onChange={handleInputChange} />
+      <input type="number" name="num2" onChange={handleInputChange} />
+
+      <br /><br />
+
+      {/* Operation buttons */}
+      <button onClick={() => calculate('add')}>+</button>
+      <button onClick={() => calculate('sub')}>-</button>
+      <button onClick={() => calculate('mul')}>*</button>
+      <button onClick={() => calculate('div')}>/</button>
+
+      {/* Display result */}
+      <h3>Result: {result}</h3>
+    </div>
+  );
+}
+
+export default Calculator;
