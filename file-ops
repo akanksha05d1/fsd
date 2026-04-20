@@ -1,0 +1,14 @@
+const fs = require("fs");
+
+// Write
+fs.writeFileSync("sample.txt", "Hello File");
+
+// Read
+const data = fs.readFileSync("sample.txt", "utf8");
+console.log(data);
+
+// Append
+fs.appendFileSync("sample.txt", "\nWelcome to Node.js");
+
+// Delete
+fs.unlinkSync("sample.txt");
