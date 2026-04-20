@@ -1,0 +1,110 @@
+//server.js
+const express = require('express');
+const cors = require('cors');
+
+const app = express();
+
+app.use(cors());
+
+app.use(express.json());
+
+let students = [
+    { id: 1, name: "Arjun", grade: "A" },
+    { id: 2, name: "Sneha", grade: "B" }
+];
+
+app.get('/api/students', (req, res) => {
+    res.json(students); 
+});
+
+app.post('/api/students', (req, res) => {
+
+    const newStudent = {
+        id: Date.now(),  
+        ...req.body       
+    };
+
+    students.push(newStudent); // Add to array
+
+    res.json(newStudent); // Send back added student
+});
+
+app.delete('/api/students/:id', (req, res) => {
+
+    const id = parseInt(req.params.id);
+
+    students = students.filter(s => s.id !== id);
+
+    res.json({ message: "Deleted" });
+});
+
+app.listen(3000, () => {
+    console.log("Server running on http://localhost:3000");
+});
+
+//index.html
+<!DOCTYPE html>
+<html ng-app="studentApp"> <!-- Start Angular app -->
+<head>
+    <title>Student Manager</title>
+
+    <!-- AngularJS CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+
+<body ng-controller="StudentCtrl"> <!-- Connect controller -->
+
+<h2>Manage Students</h2>
+
+<!-- Input fields to add student -->
+<input type="text" ng-model="newStudent.name" placeholder="Name">
+<input type="text" ng-model="newStudent.grade" placeholder="Grade">
+
+<!-- Button to add student -->
+<button ng-click="addStudent()">Add Student</button>
+
+<br><br>
+
+<!-- Display student list -->
+<div ng-repeat="s in students">
+    {{s.name}} - {{s.grade}}
+
+    <!-- Delete button -->
+    <button ng-click="deleteStudent(s.id)">Delete</button>
+</div>
+
+<script>
+
+var app = angular.module('studentApp', []);
+
+app.controller('StudentCtrl', function($scope, $http) {
+
+    $scope.newStudent = {};   // store new student
+    $scope.students = [];     // store student list
+
+    $scope.loadStudents = function() {
+        $http.get('http://localhost:3000/api/students')
+        .then(function(res) {
+            $scope.students = res.data;
+        });
+    };
+    $scope.addStudent = function() {
+        $http.post('http://localhost:3000/api/students', $scope.newStudent)
+        .then(function() {
+            $scope.newStudent = {};   // clear inputs
+            $scope.loadStudents();    // reload list
+        });
+    };
+    $scope.deleteStudent = function(id) {
+        $http.delete('http://localhost:3000/api/students/' + id)
+        .then(function() {
+            $scope.loadStudents(); // reload list
+        });
+    };
+
+    $scope.loadStudents();
+});
+</script>
+
+</body>
+</html>
